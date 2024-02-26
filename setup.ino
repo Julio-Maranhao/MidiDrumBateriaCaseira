@@ -9,6 +9,10 @@ void setup()
   # else
     Serial.begin(115200);
   # endif
+
+  # if USEMULTIPLEX
+    multiplex.setMultiplex();
+  # endif
   
   //Mostra informacoes no display
   lcd.print("Hello World");
@@ -16,5 +20,5 @@ void setup()
     pinMode(button, INPUT_PULLUP);
   }
 
-  Pin[0].set(ANALOG12, "chama", 36, 4);
+  Pin[0].set(ANALOG12, "chama", 36, 3);
 }

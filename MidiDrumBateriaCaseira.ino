@@ -4,11 +4,13 @@
 #include <math.h>
 ///// CONFIGURAÇÃO /////
 #define USEMIDI 0             // 0 = 115200 SerialSpeed; 1 = 31250 SerialSpeed MIDI
-#define ANALOGPINS 16            // Define a quantidade total de pinos analogicos
+#define USEMULTIPLEX 1        // 1 = Usou multiplex para extender entradas; 0 = Não usou
+#define ANALOGPINS 16         // Define a quantidade total de pinos analogicos
+#define DIGITALPINS 3         // Define a quantidade total de pinos digitais
 ////////////////////////
 
 // Function to play MIDI
-//#define fastNoteOn(_note,_velocity) { Serial.write(0x90 | 0x09);Serial.write(_note);Serial.write(_velocity); }
+#define fastNoteOn(_note,_velocity) { Serial.write(0x90 | 0x09);Serial.write(_note);Serial.write(_velocity); }
 //#define fastMidiCC(_number,_value) { Serial.write((0xB0 | 0x09)); Serial.write(_number); Serial.write(_value); }
 
 // Defines Aux
@@ -34,10 +36,4 @@ LcdHandler handler = LcdHandler();
 const byte nPin = ANALOGPINS;
 //Numeração dos pinos
 int buttons[] = {CIMA, BAIXO, ESQUERDA, DIREITA, OK};
-struct lcdMessage {
-  bool trigger = false;
-  String pinName;
-  String pinNote;
-  String pinVelocity;
-};
 
