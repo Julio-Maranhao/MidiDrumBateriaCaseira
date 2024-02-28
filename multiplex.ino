@@ -1,8 +1,8 @@
 //Class to handle multiplex input
 
 class MuxControl {
-  int controlPin[4] = {MX1, MX2, MX3, MX4};
-  int muxChannel[16][4]={
+  byte controlPin[4] = {MX1, MX2, MX3, MX4};
+  byte muxChannel[16][4]={
   {0,0,0,0}, //channel 0
   {1,0,0,0}, //channel 1
   {0,1,0,0}, //channel 2

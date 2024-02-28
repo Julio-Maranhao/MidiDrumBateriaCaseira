@@ -8,6 +8,6 @@ void loop() {
     handler.pushOnBottom("BAIXO");
     handler.indicatePosition(3);
   }
-  Pin[0].scan();
+  Pin[0].playMIDI();
   delay(4);
 }

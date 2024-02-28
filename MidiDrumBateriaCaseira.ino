@@ -5,8 +5,9 @@
 ///// CONFIGURAÇÃO /////
 #define USEMIDI 1             // 0 = 115200 SerialSpeed; 1 = 31250 SerialSpeed MIDI
 #define USEMULTIPLEX 1        // 1 = Usou multiplex para extender entradas; 0 = Não usou
-#define ANALOGPINS 16         // Define a quantidade total de pinos analogicos
-#define DIGITALPINS 3         // Define a quantidade total de pinos digitais
+#define ANALOGPINS 12         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador
+#define ANALOGINPUTS 12       // Define a quantidade total de pinos analogicos do Arduino
+#define DIGITALPINS 3         // Define a quantidade total de pinos digitais usados no projeto
 ////////////////////////
 
 // Function to play MIDI
@@ -36,8 +37,12 @@ const byte nPin = ANALOGPINS;
 LcdHandler handler = LcdHandler();
 
 //Numeração dos pinos
-int buttons[] = {CIMA, BAIXO, ESQUERDA, DIREITA, OK};
+byte buttons[] = {CIMA, BAIXO, ESQUERDA, DIREITA, OK};
 
-//Lista de Pinos Analógicos do Arduino
-int inputList[ANALOGPINS] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15};
+//Listas de dados de Pinos Analógicos do Arduino
+byte inputList[ANALOGINPUTS];
+String inputNames[ANALOGINPUTS];
+char* curveNames[3] = {"A", "B", "C"};
+char* analogTypes[3] = {"Piezo", "Optical", "Pot"};
+
 

@@ -1,36 +1,36 @@
 // analog Read 0 - 1023 (1024 numbers) float
 
 class pin {
-  int input;
-  int muxChannel;
-  String name;
-  String curve;
+  byte input;
+  byte muxChannel;
+  char curve;
   float minSens;
   float maxSens;
-  int type;
-  int time;
+  byte type;
+  long time;
   int currentTime;
+  public:
+  char* name;
+  byte note;
+  byte scanTime;
+  byte maskTime;
+  byte gain;
   bool isMultiplex;
   bool disabled;
-  public:
-  int note;
-  int scanTime;
-  int maskTime;
-  int gain;
 
   public:
   pin(){
     scanTime = 10;
     maskTime = 50;
     gain = 0;
-    curve = "Linear";
+    curve = "C";
     minSens = 400.00;
     maxSens = 1024.00;
     currentTime = 0;
     time = 0;
   }
 
-  void set(int pinInput, String pinName, int pinNote, int pinType, bool isDisabled = false){
+  void set(byte pinInput, char* pinName, byte pinNote, byte pinType, bool isDisabled = false){
     input = pinInput;
     note = pinNote;
     name = pinName;
@@ -84,44 +84,64 @@ class pin {
   }
   // SERÀ COM GET E SET OU PROTECTED E SET
 
-  void increaseInput(){
-    for (int i = 0; i < sizeof(inputList); i++) {
-      if (input == inputList[i]) {
-        if (i + 1 > sizeof(inputList) - 1) {return;}
-        input = inputList[i + 1];
-        return;
+  int getInput(){
+    return input - A0;    
+  }
+
+  String getInputName(){
+    return inputNames[input - A0];
+  }
+
+  void setInput(int pinNumber) {
+    if(pinNumber > ANALOGPINS) {
+      input = ANALOGPINS + A0;
+      return;
       }
+    if(pinNumber < 0){
+      input = A0;
+      return;
+    }
+    input = A0 + pinNumber;
+  }
+
+  int getMuxChannel(){
+    return muxChannel;
+  }
+
+  void setMuxChannel(int channel){
+    if(channel > 16) {muxChannel = 16; return;}
+    if(channel < 0) {muxChannel = 0; return;}
+    muxChannel = channel;
+  }
+
+  char getCurve() {
+    return curve;
+  }
+
+  void setCurve(char curveName) {
+    curve = curveName;
+  }
+
+  char* getType() {
+    return analogTypes[type];
+  }
+
+  void changeType(bool reverse=false) {
+    if(reverse){
+      if(type-1 > 0){return;}
+      type -= 1;
+    }else{
+      if(type+1 > sizeof(analogTypes)){return;}
+      type += 1;
     }
   }
 
-  void decreaseInput(){
-    for (int i = 0; i < sizeof(inputList); i++) {
-      if (input == inputList[i]) {
-        if (i - 1 < 0) { return;}
-        input = inputList[i - 1];
-        return;
-      }
-    }
-  }
+ void changeDisabled(){
+  if(disabled){disabled = false;} else {disabled=true;}
+ }
 
-  void increaseMuxChannel(){
-    for (int i = 0; i < 16; i++) {
-      if (input == inputList[i]) {
-        if (i + 1 > 15) { return;}
-        input = inputList[i + 1];
-        return;
-      }
-    }
-  }
-
-  void decreaseMuxChannel(){
-    for (int i = 0; i < 16; i++) {
-      if (input == inputList[i]) {
-        if (i - 1 < 0) { return;}
-        input = inputList[i - 1];
-        return;
-      }
-    }
-  }
+ void changeIsMultiplex(){
+  if(isMultiplex){isMultiplex = false;} else {isMultiplex=true;}
+ }
 
 }Pin[nPin];
