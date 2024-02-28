@@ -1,7 +1,6 @@
 void setup()
 {
   //Define o LCD com 20 colunas e 4 linhas
-  //lcd.begin(20, 4);
   lcd.begin(20, 4);
   //Inicia o Serial
   # if USEMIDI
@@ -19,6 +18,5 @@ void setup()
   for(int button : buttons) {
     pinMode(button, INPUT_PULLUP);
   }
-
-  Pin[0].set(ANALOG12, "chama", 36, 3);
+  Pin[0].set(ANALOG12, "Kick", 36, 2);
 }

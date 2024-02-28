@@ -3,23 +3,24 @@
 class pin {
   int input;
   int muxChannel;
-  int note;
-  //int scanTime;
-  int maskTime;
-  int time;
-  int currentTime;
-  int gain;
-  int type;
   String name;
   String curve;
   float minSens;
   float maxSens;
-  bool disabled;
+  int type;
+  int time;
+  int currentTime;
   bool isMultiplex;
+  bool disabled;
+  public:
+  int note;
+  int scanTime;
+  int maskTime;
+  int gain;
 
   public:
   pin(){
-    //scanTime = 10;
+    scanTime = 10;
     maskTime = 50;
     gain = 0;
     curve = "Linear";
@@ -37,7 +38,8 @@ class pin {
     disabled = isDisabled;
   }
 
-  void Scan(){
+  void scan(){
+    if (disabled){return;}
     if (isMultiplex){multiplex.setChannel(muxChannel);}
     float read = analogRead(input);
     if (read > minSens) {
@@ -54,8 +56,14 @@ class pin {
     if (disabled){return;}
     switch (type) {
       case 1:
+        ///////////////////////
+        //// POTENTIOMETER ////
+        ///////////////////////
         break;
       case 2:
+        ///////////////////////
+        /////// OPTICAL ///////
+        ///////////////////////
         break;
       default:
         ///////////////////////
@@ -74,9 +82,46 @@ class pin {
         }
     }
   }
+  // SERÀ COM GET E SET OU PROTECTED E SET
 
-  void setNome(String newName){
-    name = newName;
+  void increaseInput(){
+    for (int i = 0; i < sizeof(inputList); i++) {
+      if (input == inputList[i]) {
+        if (i + 1 > sizeof(inputList) - 1) {return;}
+        input = inputList[i + 1];
+        return;
+      }
+    }
   }
 
-}Pin[nPin] ;
+  void decreaseInput(){
+    for (int i = 0; i < sizeof(inputList); i++) {
+      if (input == inputList[i]) {
+        if (i - 1 < 0) { return;}
+        input = inputList[i - 1];
+        return;
+      }
+    }
+  }
+
+  void increaseMuxChannel(){
+    for (int i = 0; i < 16; i++) {
+      if (input == inputList[i]) {
+        if (i + 1 > 15) { return;}
+        input = inputList[i + 1];
+        return;
+      }
+    }
+  }
+
+  void decreaseMuxChannel(){
+    for (int i = 0; i < 16; i++) {
+      if (input == inputList[i]) {
+        if (i - 1 < 0) { return;}
+        input = inputList[i - 1];
+        return;
+      }
+    }
+  }
+
+}Pin[nPin];

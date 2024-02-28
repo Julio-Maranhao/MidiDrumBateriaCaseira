@@ -3,15 +3,15 @@
 #include <LiquidCrystal.h>
 #include <math.h>
 ///// CONFIGURAÇÃO /////
-#define USEMIDI 0             // 0 = 115200 SerialSpeed; 1 = 31250 SerialSpeed MIDI
+#define USEMIDI 1             // 0 = 115200 SerialSpeed; 1 = 31250 SerialSpeed MIDI
 #define USEMULTIPLEX 1        // 1 = Usou multiplex para extender entradas; 0 = Não usou
 #define ANALOGPINS 16         // Define a quantidade total de pinos analogicos
 #define DIGITALPINS 3         // Define a quantidade total de pinos digitais
 ////////////////////////
 
 // Function to play MIDI
-#define fastNoteOn(_note,_velocity) { Serial.write(0x90 | 0x09);Serial.write(_note);Serial.write(_velocity); }
-//#define fastMidiCC(_number,_value) { Serial.write((0xB0 | 0x09)); Serial.write(_number); Serial.write(_value); }
+#define fastNoteOn(_note,_velocity) { Serial.write(0x90 | 9);Serial.write(_note);Serial.write(_velocity); }
+#define fastCCOn(_note,_velocity) { Serial.write(0xB0 | 9);Serial.write(_note);Serial.write(_velocity); }
 
 // Defines Aux
 #define TIMEFUNCTION millis()
@@ -29,11 +29,15 @@
 # define OK 28
 
 # define ANALOG12 A12
+//Determina a quantidade de pinos
+const byte nPin = ANALOGPINS;
 
 //Inicializa o LCD
 LcdHandler handler = LcdHandler();
-//Determina a quantidade de pinos
-const byte nPin = ANALOGPINS;
+
 //Numeração dos pinos
 int buttons[] = {CIMA, BAIXO, ESQUERDA, DIREITA, OK};
+
+//Lista de Pinos Analógicos do Arduino
+int inputList[ANALOGPINS] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15};
 
