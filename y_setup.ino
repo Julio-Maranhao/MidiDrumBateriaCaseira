@@ -13,17 +13,21 @@ void setup()
     multiplex.setMultiplex();
   # endif
 
-  // Set Pin Info for Settings
-  for(int i = 0; i<ANALOGPINS; i++){
-    inputList[i] = A0 + 1;
-    inputNames[i] = "A" + String(i);
-  }
+  // Set main menu
+  mainMenu.init();
+
+  // Setar Botoes de Conctrole
+  Buttons[0].set(OK, true);
+  Buttons[1].set(CIMA, true);
+  Buttons[2].set(BAIXO, true);
+  Buttons[3].set(DIREITA, true);
+  Buttons[4].set(ESQUERDA, true);
+
+  pinMode(OK, INPUT_PULLUP);
+  pinMode(CIMA, INPUT_PULLUP);
+  pinMode(BAIXO, INPUT_PULLUP);
+  pinMode(DIREITA, INPUT_PULLUP);
+  pinMode(ESQUERDA, INPUT_PULLUP);
   
-  //Mostra informacoes no display
-  lcd.print("Hello World");
-  for(int button : buttons) {
-    pinMode(button, INPUT_PULLUP);
-  }
-  
-  Pin[0].set(ANALOG12, "Kick", 36, 2);
+  defaultPresset();
 }

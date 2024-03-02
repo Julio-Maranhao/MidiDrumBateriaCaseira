@@ -2,7 +2,7 @@
 
 class MuxControl {
   byte controlPin[4] = {MX1, MX2, MX3, MX4};
-  byte muxChannel[16][4]={
+  /*byte muxChannel[16][4]={
   {0,0,0,0}, //channel 0
   {1,0,0,0}, //channel 1
   {0,1,0,0}, //channel 2
@@ -19,7 +19,7 @@ class MuxControl {
   {1,0,1,1}, //channel 13
   {0,1,1,1}, //channel 14
   {1,1,1,1}  //channel 15
-  };
+  };*/
 
   public:
   MuxControl(){}
@@ -34,7 +34,7 @@ class MuxControl {
 
   void setChannel(int channel){
     for(int i = 0; i < 4; i ++){
-    digitalWrite(controlPin[i], muxChannel[channel][i]);
+    digitalWrite(controlPin[i], bitRead(channel, i));
     }
   }
 

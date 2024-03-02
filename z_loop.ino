@@ -1,13 +1,19 @@
 void loop() {
   // put your main code here, to run repeatedly:
-  if(!digitalRead(CIMA)){
-    handler.pushOnTop("CIMA");
-    handler.indicatePosition(0);
+  // Read Control Buttons
+  Buttons[0].readButton();
+  Buttons[1].readButton();
+  Buttons[2].readButton();
+  Buttons[3].readButton();
+  Buttons[4].readButton();
+  
+  //Navigate Main Menu
+  mainMenu.navigate();
+
+  // Scan all pins
+  for(int i = 0; i<ANALOGPINS; i++){
+    Pin[i].playMIDI();
   }
-  if(!digitalRead(BAIXO)){
-    handler.pushOnBottom("BAIXO");
-    handler.indicatePosition(3);
-  }
-  Pin[0].playMIDI();
-  delay(4);
+
+  delay(1);
 }

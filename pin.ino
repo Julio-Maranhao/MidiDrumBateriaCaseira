@@ -4,30 +4,28 @@ class pin {
   byte input;
   byte muxChannel;
   char curve;
-  float minSens;
-  float maxSens;
   byte type;
   long time;
-  int currentTime;
+  byte lastVelocity;
   public:
   char* name;
   byte note;
-  byte scanTime;
   byte maskTime;
+  float minSens;
+  float maxSens;
   byte gain;
   bool isMultiplex;
   bool disabled;
 
   public:
   pin(){
-    scanTime = 10;
     maskTime = 50;
     gain = 0;
-    curve = "C";
+    curve = 67;
     minSens = 400.00;
     maxSens = 1024.00;
-    currentTime = 0;
     time = 0;
+    lastVelocity = 0;
   }
 
   void set(byte pinInput, char* pinName, byte pinNote, byte pinType, bool isDisabled = false){
@@ -38,58 +36,71 @@ class pin {
     disabled = isDisabled;
   }
 
-  void scan(){
-    if (disabled){return;}
-    if (isMultiplex){multiplex.setChannel(muxChannel);}
-    float read = analogRead(input);
-    if (read > minSens) {
-      int velocity = round((read - minSens)/(maxSens - minSens) * 127) ;
-      fastNoteOn(note, velocity);
-
-      handler.replaceValue(1, name);
-      handler.replaceValue(2, String(note));
-      handler.replaceValue(3, String(velocity));
-    }
-  }
-
   void playMIDI(){
     if (disabled){return;}
+    float read;
+    long globalTime;
+    int velocity;
     switch (type) {
       case 1:
         ///////////////////////
-        //// POTENTIOMETER ////
-        ///////////////////////
-        break;
-      case 2:
-        ///////////////////////
         /////// OPTICAL ///////
         ///////////////////////
+        if (isMultiplex){multiplex.setChannel(muxChannel);}
+        read = analogRead(input);
+        if (read > minSens) {
+          globalTime = millis();
+          if (globalTime - time > maskTime) {
+            velocity = round((read - minSens)/(maxSens - minSens) * 127) + gain;
+            if (curve != 67) {
+              if (curve == 65) {
+                velocity = ceil(-0.0085*pow(velocity,2) + 2.078*velocity);
+              } else {
+                velocity = ceil(0.0068*pow(velocity,2) + 0.1325*velocity);
+              }
+            }
+            if (velocity > 127){velocity = 127;}
+            if(abs(velocity - lastVelocity) > 10){
+              fastCCOn(note, velocity);
+              lastVelocity = velocity;
+              if(readScan){
+                handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
+              }
+              time = globalTime;
+            }
+          }
+        }
         break;
       default:
         ///////////////////////
         //////// PIEZO ////////
         ///////////////////////
         if (isMultiplex){multiplex.setChannel(muxChannel);}
-        float read = analogRead(input);
+        read = analogRead(input);
         if (read > minSens) {
-          long globalTime = TIMEFUNCTION;
+          globalTime = millis();
           if (globalTime - time > maskTime) {
-            int velocity = round((read - minSens)/(maxSens - minSens) * 127) + gain;
-              if (velocity > 127){velocity = 127;}
+            velocity = round((read - minSens)/(maxSens - minSens) * 127) + gain;
+            if (curve != 67) {
+              if (curve == 65) {
+                velocity = ceil(-0.0085*pow(velocity,2) + 2.078*velocity);
+              } else {
+                velocity = ceil(0.0068*pow(velocity,2) + 0.1325*velocity);
+              }
+            }
+            if (velocity > 127){velocity = 127;}
             fastNoteOn(note, velocity);
+            if(readScan){
+              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
+            }
           }
           time = globalTime;
         }
     }
   }
-  // SERÀ COM GET E SET OU PROTECTED E SET
 
   int getInput(){
     return input - A0;    
-  }
-
-  String getInputName(){
-    return inputNames[input - A0];
   }
 
   void setInput(int pinNumber) {
@@ -114,12 +125,20 @@ class pin {
     muxChannel = channel;
   }
 
-  char getCurve() {
-    return curve;
+  String getCurve() {
+    String cName = " ";
+    cName.setCharAt(0, curve);
+    return cName;
   }
 
-  void setCurve(char curveName) {
-    curve = curveName;
+  void changeCurve(bool reverse=false) {
+    if(reverse){
+      if(curve == 65){return;}
+      curve -= 1;
+    }else{
+      if(curve+1 > 67){return;}
+      curve += 1;
+    }
   }
 
   char* getType() {
@@ -128,20 +147,28 @@ class pin {
 
   void changeType(bool reverse=false) {
     if(reverse){
-      if(type-1 > 0){return;}
+      if(type == 0){return;}
       type -= 1;
     }else{
-      if(type+1 > sizeof(analogTypes)){return;}
+      if(type == 1){return;}
       type += 1;
     }
   }
 
- void changeDisabled(){
-  if(disabled){disabled = false;} else {disabled=true;}
- }
+  String getDisabled() {
+    if(disabled) {
+      return "true";
+    } else{
+      return "false";
+    }
+  }
 
- void changeIsMultiplex(){
+  void changeDisabled(){
+  if(disabled){disabled = false;} else {disabled=true;}
+  }
+
+  void changeIsMultiplex(){
   if(isMultiplex){isMultiplex = false;} else {isMultiplex=true;}
- }
+  }
 
 }Pin[nPin];

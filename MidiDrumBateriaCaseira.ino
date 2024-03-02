@@ -1,21 +1,19 @@
 //Carrega a biblioteca do LCD
 #include "lcdHandler.h"
-#include <LiquidCrystal.h>
 #include <math.h>
+#include <EEPROM.h>
+
 ///// CONFIGURAÇÃO /////
 #define USEMIDI 1             // 0 = 115200 SerialSpeed; 1 = 31250 SerialSpeed MIDI
 #define USEMULTIPLEX 1        // 1 = Usou multiplex para extender entradas; 0 = Não usou
-#define ANALOGPINS 12         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador
-#define ANALOGINPUTS 12       // Define a quantidade total de pinos analogicos do Arduino
-#define DIGITALPINS 3         // Define a quantidade total de pinos digitais usados no projeto
+#define ANALOGPINS 13         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador
+#define DIGITALPINS 2         // Define a quantidade total de pinos digitais usados no projeto
+#define MIDICHANNEL 0         // Define o indice do Channel do MIDI -> (VALOR + 1) -> Se 0 -> MIDI Channel = 1
 ////////////////////////
 
 // Function to play MIDI
-#define fastNoteOn(_note,_velocity) { Serial.write(0x90 | 9);Serial.write(_note);Serial.write(_velocity); }
-#define fastCCOn(_note,_velocity) { Serial.write(0xB0 | 9);Serial.write(_note);Serial.write(_velocity); }
-
-// Defines Aux
-#define TIMEFUNCTION millis()
+#define fastNoteOn(_note,_velocity) { Serial.write(0x90 | MIDICHANNEL);Serial.write(_note);Serial.write(_velocity); }
+#define fastCCOn(_note,_velocity) { Serial.write(0xB0 | MIDICHANNEL);Serial.write(_note);Serial.write(_velocity); }
 
 // Defines Multiplex Out Pins
 #define MX1 30
@@ -29,20 +27,19 @@
 # define ESQUERDA 27
 # define OK 28
 
-# define ANALOG12 A12
 //Determina a quantidade de pinos
 const byte nPin = ANALOGPINS;
+const byte nDpin = DIGITALPINS;
 
 //Inicializa o LCD
 LcdHandler handler = LcdHandler();
 
-//Numeração dos pinos
-byte buttons[] = {CIMA, BAIXO, ESQUERDA, DIREITA, OK};
+//Dados menu
+bool readScan = false;
+bool updateScreen = false;
 
 //Listas de dados de Pinos Analógicos do Arduino
-byte inputList[ANALOGINPUTS];
-String inputNames[ANALOGINPUTS];
-char* curveNames[3] = {"A", "B", "C"};
-char* analogTypes[3] = {"Piezo", "Optical", "Pot"};
+char* analogTypes[2] = {"Piezo", "Optical"};
+char* digitalTypes[2] = {"Note", "Control"};
 
 

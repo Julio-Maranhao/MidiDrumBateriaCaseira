@@ -17,8 +17,27 @@ class LcdHandler {
   }
 
   void replaceValue(int line, String val) {
+    if(val.equals(stringList[line])) {return;}
     stringList[line] = val;
     printValue(line, val);
+  }
+
+  void replaceValueForce(int line, String val) {
+    stringList[line] = val;
+    printValue(line, val);
+  }
+
+  void replaceSettingsValue(int line, String val) {
+    if(val.equals(stringList[line])) {return;}
+    if(stringList[line].startsWith(">")) {
+      stringList[line] = ">" + val;
+      printValue(line, stringList[line]);
+      lcd.setCursor(0, line);
+      lcd.blink();
+    } else {
+      stringList[line] = val;
+      printValue(line, val);
+    }
   }
 
   void pushOnTop(String val){
@@ -42,7 +61,9 @@ class LcdHandler {
   void indicatePosition(int line){
     for(int i=0; i<4; i++){
       if (i == line){
-        replaceValue(i, ">" + stringList[i]);
+        if (!(stringList[i].startsWith(">"))){
+          replaceValue(i, ">" + stringList[i]);
+        }
       } else {
         stringList[i].replace(">", "");
         printValue(i, stringList[i]);
@@ -50,7 +71,15 @@ class LcdHandler {
     }
     lcd.setCursor(0, line);
     lcd.blink();
-    delay(500);
+  }
+
+  void resetIndication(int line){
+    lcd.setCursor(0, line);
+    lcd.blink();
+  }
+
+  void stopBlink() {
+    lcd.noBlink();
   }
 
 
