@@ -39,7 +39,10 @@ class menu {
             analogPinsNav();
             break;
           case 2:
-            ///
+            digitalPinsNav();
+            break;
+          case 3:
+            // Global Settings
             break;
         }
         break;
@@ -278,7 +281,51 @@ class menu {
   }
 
   void digitalPinsNav(){
+    if(updateScreen){
+      handler.replaceSettingsValue(0, getDigitalPinProperty(onScreen - 3));
+      handler.replaceSettingsValue(1, getDigitalPinProperty(onScreen - 2));
+      handler.replaceSettingsValue(2, getDigitalPinProperty(onScreen - 1));
+      handler.replaceSettingsValue(3, getDigitalPinProperty(onScreen));
+      handler.indicatePosition(option - (onScreen -3));
+      updateScreen = false;
+    }
 
+    if(Buttons[0].hold() >= 1) {
+      level = 3;
+      layer = 0;
+      readScan = false;
+      updateScreen = false;
+      settingsScr();
+    }
+    if (Buttons[1].isPressed()){
+      if(option == 0){ return;}
+      option -= 1;
+      if (option + 3 < onScreen) {
+        onScreen -= 1;
+      }
+      handler.indicatePosition(option);
+      updateScreen = true;
+    }
+    if (Buttons[2].isPressed()){
+      if(option == 5){ return;}
+      option += 1;
+      if (option > onScreen) {
+        onScreen += 1;
+      }
+      handler.indicatePosition(option);
+      updateScreen = true;
+    }
+    if (Buttons[3].isPressed()){
+      setDigitalPinProperty(option, false);
+      updateScreen = true;
+    }
+    if (Buttons[4].isPressed()){
+      setDigitalPinProperty(option, true);
+      updateScreen = true;
+    }
+    // Guard For Max|Min value
+    if (pin == nDpin) {pin = 0;}
+    if (pin >= nDpin-1) {pin = nDpin-1;}
   }
 
   private:
@@ -342,6 +389,52 @@ class menu {
         break;
       case 6:
         Pin[pin].changeDisabled();
+        break;
+    }
+  }
+
+  String getDigitalPinProperty(byte num) {
+    switch(num){
+      case 0:
+        return addBlankBetweenValues("Name:", String(Dpin[pin].name));
+        break;
+      case 1:
+        return addBlankBetweenValues("Note:", String(Dpin[pin].note));
+        break;
+      case 2:
+        return addBlankBetweenValues("Type:", String(Dpin[pin].getType()));
+        break;
+      case 3:
+        return addBlankBetweenValues("MaskTime:", String(Dpin[pin].maskTime));
+        break;
+      case 4:
+        return addBlankBetweenValues("DefState:", Dpin[pin].getDefState());
+        break;
+      case 5:
+        return addBlankBetweenValues("Disabled:", Dpin[pin].getDisabled());
+        break;
+    }
+  }
+
+  void setDigitalPinProperty(byte num, bool reverse) {
+    switch(num){
+      case 0:
+        if(reverse){pin -= 1;} else {pin += 1;};
+        break;
+      case 1:
+        if(reverse){Dpin[pin].note -= 1;} else{Dpin[pin].note += 1;}
+        break;
+      case 2:
+        Dpin[pin].changeType(reverse);
+        break;
+      case 3:
+        if(reverse){Dpin[pin].maskTime -= 1;} else{Dpin[pin].maskTime += 1;}
+        break;
+      case 4:
+        Dpin[pin].changeDefState();
+        break;
+      case 5:
+        Dpin[pin].changeDisabled();
         break;
     }
   }

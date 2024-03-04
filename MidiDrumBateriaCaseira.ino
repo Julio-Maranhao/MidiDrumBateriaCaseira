@@ -1,14 +1,14 @@
 //Carrega a biblioteca do LCD
 #include "lcdHandler.h"
 #include <math.h>
-#include <EEPROM.h>
 
 ///// CONFIGURAÇÃO /////
 #define USEMIDI 1             // 0 = 115200 SerialSpeed; 1 = 31250 SerialSpeed MIDI
-#define USEMULTIPLEX 1        // 1 = Usou multiplex para extender entradas; 0 = Não usou
+#define USEMULTIPLEX 0        // 1 = Usou multiplex para extender entradas; 0 = Não usou
 #define ANALOGPINS 13         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador
 #define DIGITALPINS 2         // Define a quantidade total de pinos digitais usados no projeto
 #define MIDICHANNEL 0         // Define o indice do Channel do MIDI -> (VALOR + 1) -> Se 0 -> MIDI Channel = 1
+#define HHCSENS 5             // Define o minimo da sensibilidade do HH controller
 ////////////////////////
 
 // Function to play MIDI

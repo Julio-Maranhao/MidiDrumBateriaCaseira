@@ -14,6 +14,9 @@ void loop() {
   for(int i = 0; i<ANALOGPINS; i++){
     Pin[i].playMIDI();
   }
+  for(int i = 0; i<DIGITALPINS; i++){
+    Dpin[i].playMIDI();
+  }
 
   delay(1);
 }

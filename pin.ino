@@ -60,7 +60,7 @@ class pin {
               }
             }
             if (velocity > 127){velocity = 127;}
-            if(abs(velocity - lastVelocity) > 10){
+            if(abs(velocity - lastVelocity) > HHCSENS){
               fastCCOn(note, velocity);
               lastVelocity = velocity;
               if(readScan){
