@@ -17,11 +17,11 @@ void setup()
   mainMenu.init();
 
   // Setar Botoes de Conctrole
-  Buttons[0].set(OK, true);
-  Buttons[1].set(CIMA, true);
-  Buttons[2].set(BAIXO, true);
-  Buttons[3].set(DIREITA, true);
-  Buttons[4].set(ESQUERDA, true);
+  Buttons[0].set(OK, BUTTONDEFAULTSTATE);
+  Buttons[1].set(CIMA, BUTTONDEFAULTSTATE);
+  Buttons[2].set(BAIXO, BUTTONDEFAULTSTATE);
+  Buttons[3].set(DIREITA, BUTTONDEFAULTSTATE);
+  Buttons[4].set(ESQUERDA, BUTTONDEFAULTSTATE);
 
   pinMode(OK, INPUT_PULLUP);
   pinMode(CIMA, INPUT_PULLUP);

@@ -45,7 +45,7 @@ class dpin {
         if (read != defaultState) {
           velocity = 127;
           if(lastVelocity != 127){
-            fastCCOn(note, velocity);
+            fastCCOn(midiChannel, note, velocity);
             lastVelocity = velocity;
             if(readScan){
               handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
@@ -54,7 +54,7 @@ class dpin {
         } else {
           velocity = 0;
           if(lastVelocity != 0){
-            fastCCOn(note, velocity);
+            fastCCOn(midiChannel, note, velocity);
             lastVelocity = velocity;
             if(readScan){
               handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
@@ -73,7 +73,7 @@ class dpin {
           globalTime = millis();
           if (globalTime - time > maskTime) {
             velocity = 127;
-            fastNoteOn(note, velocity);
+            fastNoteOn(midiChannel, note, velocity);
             if(readScan){
               handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
             }

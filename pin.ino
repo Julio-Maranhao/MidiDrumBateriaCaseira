@@ -60,8 +60,8 @@ class pin {
               }
             }
             if (velocity > 127){velocity = 127;}
-            if(abs(velocity - lastVelocity) > HHCSENS){
-              fastCCOn(note, velocity);
+            if(abs(velocity - lastVelocity) > hhControlSens){
+              fastCCOn(midiChannel, note, velocity);
               lastVelocity = velocity;
               if(readScan){
                 handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
@@ -89,7 +89,7 @@ class pin {
               }
             }
             if (velocity > 127){velocity = 127;}
-            fastNoteOn(note, velocity);
+            fastNoteOn(midiChannel, note, velocity);
             if(readScan){
               handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
             }

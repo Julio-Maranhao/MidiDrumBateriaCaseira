@@ -42,12 +42,12 @@ class menu {
             digitalPinsNav();
             break;
           case 3:
-            // Global Settings
+            globalSettingsNav();
             break;
         }
         break;
       case 4:
-        ///
+        pressetsNav();
         break;
     }
   }
@@ -78,6 +78,7 @@ class menu {
     if (Buttons[0].isPressed()) {
       level = option + 1;
       if(level == 3) {settingsScr(); return;}
+      if(level == 4) {updateScreen = true;}
       option = 0;
     }
   }
@@ -203,7 +204,7 @@ class menu {
     handler.replaceValue(0, "Settings:");
     handler.replaceValue(1, "Analog Pins");
     handler.replaceValue(2, "Digital Pins");
-    handler.replaceValue(3, "--------------------");
+    handler.replaceValue(3, "Global Settings");
 
     handler.indicatePosition(option);
   }
@@ -222,12 +223,12 @@ class menu {
     }
     if (Buttons[1].isPressed()){
       if(option == 1){ return;}
-      option = 1;
+      option -= 1;
       handler.indicatePosition(option);
     }
     if (Buttons[2].isPressed()){
-      if(option == 2){ return;}
-      option = 2;
+      if(option == 3){ return;}
+      option += 1;
       handler.indicatePosition(option);
     }
   }
@@ -326,6 +327,94 @@ class menu {
     // Guard For Max|Min value
     if (pin == nDpin) {pin = 0;}
     if (pin >= nDpin-1) {pin = nDpin-1;}
+  }
+
+  void globalSettingsNav(){
+    if(updateScreen){
+      handler.replaceSettingsValue(0, getGlobalProperty(onScreen - 3));
+      handler.replaceSettingsValue(1, getGlobalProperty(onScreen - 2));
+      handler.replaceSettingsValue(2, getGlobalProperty(onScreen - 1));
+      handler.replaceSettingsValue(3, getGlobalProperty(onScreen));
+      handler.indicatePosition(option - (onScreen -3));
+      updateScreen = false;
+    }
+    if(Buttons[0].hold() >= 1) {
+      level = 3;
+      layer = 0;
+      readScan = false;
+      updateScreen = false;
+      settingsScr();
+    }
+    if (Buttons[1].isPressed()){
+      if(option == 0){ return;}
+      option -= 1;
+      if (option + 3 < onScreen) {
+        onScreen -= 1;
+      }
+      handler.indicatePosition(option);
+      updateScreen = true;
+    }
+    if (Buttons[2].isPressed()){
+      if(option == 3){ return;}
+      option += 1;
+      if (option > onScreen) {
+        onScreen += 1;
+      }
+      handler.indicatePosition(option);
+      updateScreen = true;
+    }
+    if (Buttons[3].isPressed()){
+      setGlobalProperty(option, false);
+      updateScreen = true;
+    }
+    if (Buttons[4].isPressed()){
+      setGlobalProperty(option, true);
+      updateScreen = true;
+    }
+  }
+
+  void pressetsNav(){
+    if(updateScreen){
+      handler.replaceValue(0, getPresset(onScreen - 3));
+      handler.replaceValue(1, getPresset(onScreen - 2));
+      handler.replaceValue(2, getPresset(onScreen - 1));
+      handler.replaceValue(3, getPresset(onScreen));
+      handler.indicatePosition(option - (onScreen -3));
+      updateScreen = false;
+    }
+    if(Buttons[0].hold() >= 1) {
+      level = 0;
+      layer = 0;
+      readScan = false;
+      updateScreen = false;
+      mainScr();
+    }
+    if(Buttons[0].isPressed()) {
+      setPresset(option);
+      level = 0;
+      layer = 0;
+      readScan = false;
+      updateScreen = false;
+      mainScr();
+    }
+    if (Buttons[1].isPressed()){
+      if(option == 0){ return;}
+      option -= 1;
+      if (option + 3 < onScreen) {
+        onScreen -= 1;
+      }
+      handler.indicatePosition(option);
+      updateScreen = true;
+    }
+    if (Buttons[2].isPressed()){
+      if(option == PRESSETS - 1){ return;}
+      option += 1;
+      if (option > onScreen) {
+        onScreen += 1;
+      }
+      handler.indicatePosition(option);
+      updateScreen = true;
+    }
   }
 
   private:
@@ -435,6 +524,66 @@ class menu {
         break;
       case 5:
         Dpin[pin].changeDisabled();
+        break;
+    }
+  }
+
+  String getGlobalProperty(byte num) {
+    switch(num){
+      case 0:
+        return addBlankBetweenValues("Channel:", String(midiChannel));
+        break;
+      case 1:
+        return addBlankBetweenValues("HHSens:", String(hhControlSens));
+        break;
+      case 2:
+        if(hhControlMode){
+          return addBlankBetweenValues("HHMode:", "CC");
+        } else {
+          return addBlankBetweenValues("HHMode:", "Mecha");
+        }
+        break;
+      case 3:
+        if(hhControlType){
+          return addBlankBetweenValues("HHType:", "Analog");
+        } else {
+          return addBlankBetweenValues("HHType:", "Digital");
+        }
+        break;
+    }
+  }
+
+  void setGlobalProperty(byte num, bool reverse) {
+    switch(num){
+      case 0:
+        if(reverse){
+          midiChannel -= 1;
+        } else {
+          midiChannel += 1;
+        }
+        if (midiChannel == 16){ midiChannel = 0;}
+        if (midiChannel > 16){ midiChannel = 15;}
+        break;
+      case 1:
+        if(reverse){
+          hhControlSens -= 1;
+        } else {
+          hhControlSens += 1;
+        }
+        break;
+      case 2:
+        if(hhControlMode){
+          hhControlMode = false;
+        } else {
+          hhControlMode = true;
+        }
+        break;
+      case 3:
+        if(hhControlType){
+          hhControlType = false;
+        } else {
+          hhControlType = true;
+        }
         break;
     }
   }
