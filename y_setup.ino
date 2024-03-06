@@ -8,7 +8,7 @@ void setup()
   # else
     Serial.begin(115200);
   # endif
-
+  // Ativa o multiplexador
   # if USEMULTIPLEX
     multiplex.setMultiplex();
   # endif
@@ -28,6 +28,6 @@ void setup()
   pinMode(BAIXO, INPUT_PULLUP);
   pinMode(DIREITA, INPUT_PULLUP);
   pinMode(ESQUERDA, INPUT_PULLUP);
-  
+  // Carrega o presset default
   defaultPresset();
 }

@@ -1,3 +1,4 @@
+// Class to handle control buttons activity
 class controlButton {
   byte pin;
   bool defaultState;

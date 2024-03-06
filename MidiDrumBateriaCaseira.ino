@@ -1,4 +1,4 @@
-//Carrega a biblioteca do LCD
+// MAIN
 #include "lcdHandler.h"
 #include <math.h>
 //#include <SD.h>
@@ -46,17 +46,17 @@ LcdHandler handler = LcdHandler();
 //Dados menu
 bool readScan = false;
 bool updateScreen = false;
+//Menu global
 byte midiChannel = 1;
 byte hhControlSens = 5;
-byte hhPin = 0;
+byte hhPin = 7;
 byte hhControlPin = 0;
-bool hhControlMode = true;  // CC or Mechanical
+bool hhControlMode = false;  // CC or Mechanical
 bool hhControlType = true;  // Analog or Digital
 byte hhControlStages = 2;   // Qtd of notes
-byte hhNote1 = 36;          // Open HH
-byte hhNote2 = 36;          // Mid Open HH
+byte hhNote1 = 45;          // Open HH
+byte hhNote2 = 46;          // Mid Open HH
 byte hhNote3 = 36;          // Closed HH
-
 
 //Listas de dados de Pinos Analógicos do Arduino
 char* analogTypes[2] = {"Piezo", "Optical"};

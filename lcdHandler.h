@@ -1,7 +1,10 @@
 // Handle all Liquid Crystal functions to be acessed quickly
 #include <LiquidCrystal.h>
 
+/////////////////////////////////////////////////
 ////// Informar os pinos conectados no LCD //////
+//////// lcd(RS, E, DB4, DB5, DB6, DB7) /////////
+/////////////////////////////////////////////////
 LiquidCrystal lcd(12, 11, 6, 5, 4, 3);
 
 class LcdHandler {

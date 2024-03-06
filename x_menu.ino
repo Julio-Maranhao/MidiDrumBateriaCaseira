@@ -1,3 +1,4 @@
+// Class to handle menu and navigation
 class menu {
   byte level = 0;
   byte layer = 0;
@@ -94,6 +95,7 @@ class menu {
     if(Buttons[0].hold() >= 1) {
       level = 0;
       readScan = false;
+      option = 0;
       mainScr();
     }
   }
@@ -214,6 +216,7 @@ class menu {
       level = 0;
       layer = 0;
       readScan = false;
+      option = 0;
       mainScr();
     }
     if(Buttons[0].isPressed()) {
@@ -246,6 +249,8 @@ class menu {
     if(Buttons[0].hold() >= 1) {
       level = 3;
       layer = 0;
+      option = 0;
+      onScreen = 3;
       readScan = false;
       updateScreen = false;
       settingsScr();
@@ -294,6 +299,8 @@ class menu {
     if(Buttons[0].hold() >= 1) {
       level = 3;
       layer = 0;
+      option = 0;
+      onScreen = 3;
       readScan = false;
       updateScreen = false;
       settingsScr();
@@ -341,6 +348,8 @@ class menu {
     if(Buttons[0].hold() >= 1) {
       level = 3;
       layer = 0;
+      option = 0;
+      onScreen = 3;
       readScan = false;
       updateScreen = false;
       settingsScr();
@@ -355,7 +364,7 @@ class menu {
       updateScreen = true;
     }
     if (Buttons[2].isPressed()){
-      if(option == 3){ return;}
+      if(option == 9){ return;}
       option += 1;
       if (option > onScreen) {
         onScreen += 1;
@@ -385,6 +394,7 @@ class menu {
     if(Buttons[0].hold() >= 1) {
       level = 0;
       layer = 0;
+      option = 0;
       readScan = false;
       updateScreen = false;
       mainScr();
@@ -545,10 +555,28 @@ class menu {
         break;
       case 3:
         if(hhControlType){
-          return addBlankBetweenValues("HHType:", "Analog");
+          return addBlankBetweenValues("HHCType:", "Analog");
         } else {
-          return addBlankBetweenValues("HHType:", "Digital");
+          return addBlankBetweenValues("HHCType:", "Digital");
         }
+        break;
+      case 4:
+        return addBlankBetweenValues("HHCPin:", String(hhControlPin));
+        break;
+      case 5:
+        return addBlankBetweenValues("HHPin:", String(hhPin));
+        break;
+      case 6:
+        return addBlankBetweenValues("HHStages:", String(hhControlStages));
+        break;
+      case 7:
+        return addBlankBetweenValues("HHNoteOp:", String(hhNote1));
+        break;
+      case 8:
+        return addBlankBetweenValues("HHNoteMd:", String(hhNote2));
+        break;
+      case 9:
+        return addBlankBetweenValues("HHNoteCl:", String(hhNote3));
         break;
     }
   }
@@ -581,8 +609,56 @@ class menu {
       case 3:
         if(hhControlType){
           hhControlType = false;
+          hhControlStages = 2;
         } else {
           hhControlType = true;
+        }
+        break;
+      case 4:
+        if(reverse){
+          hhControlPin -= 1;
+        } else {
+          hhControlPin += 1;
+        }
+        if (hhControlPin == nPin) {hhControlPin = 0;}
+        if (hhControlPin >= nPin-1) {hhControlPin = nPin-1;}
+        break;
+      case 5:
+        if(reverse){
+          hhPin -= 1;
+        } else {
+          hhPin += 1;
+        }
+        if (hhPin == nPin) {hhPin = 0;}
+        if (hhPin >= nPin-1) {hhPin = nPin-1;}
+        break;
+      case 6:
+        if(! hhControlType){hhControlStages = 2; break;}
+        if(hhControlStages == 2){
+          hhControlStages = 3;
+        } else {
+          hhControlStages = 2;
+        }
+        break;
+      case 7:
+        if(reverse){
+          hhNote1 -= 1;
+        } else {
+          hhNote1 += 1;
+        }
+        break;
+      case 8:
+        if(reverse){
+          hhNote2 -= 1;
+        } else {
+          hhNote2 += 1;
+        }
+        break;
+      case 9:
+        if(reverse){
+          hhNote3 -= 1;
+        } else {
+          hhNote3 += 1;
         }
         break;
     }

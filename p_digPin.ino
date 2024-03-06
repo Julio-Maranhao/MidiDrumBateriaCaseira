@@ -1,3 +1,4 @@
+// Class to handle digital Pins
 class dpin {
   byte muxChannel;
   byte type;
@@ -81,6 +82,38 @@ class dpin {
           time = globalTime;
         }
     }
+  }
+
+  byte playHHMechanicalControl(){
+    bool read;
+    long globalTime;
+    int velocity;
+    byte response;
+    if (isMultiplex){multiplex.setChannel(muxChannel);}
+    read = analogRead(input);
+    globalTime = millis();
+    if (read != defaultState) {
+      if (globalTime - time > maskTime) {
+        velocity = 127;
+        response = 2;
+      }
+      time = globalTime;
+      if (lastVelocity == velocity) {
+        response = 0;
+      }
+      lastVelocity = velocity;
+    } else {
+      if (globalTime - time > maskTime) {
+        velocity = 0;
+        response = 1;
+      }
+      time = globalTime;
+      if (lastVelocity == velocity) {
+        response = 0;
+      }
+      lastVelocity = velocity;
+    }
+    return response;
   }
 
   int getMuxChannel(){

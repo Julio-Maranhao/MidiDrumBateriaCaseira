@@ -1,5 +1,4 @@
 //Class to handle multiplex input
-
 class MuxControl {
   byte controlPin[4] = {MX1, MX2, MX3, MX4};
   /*byte muxChannel[16][4]={

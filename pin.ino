@@ -1,5 +1,4 @@
-// analog Read 0 - 1023 (1024 numbers) float
-
+// Class to handle Analog Pins
 class pin {
   byte input;
   byte muxChannel;
@@ -99,6 +98,46 @@ class pin {
     }
   }
 
+  byte playHHMechanicalControl(){
+    float read;
+    long globalTime;
+    int velocity;
+    byte response;
+    if (isMultiplex){multiplex.setChannel(muxChannel);}
+    read = analogRead(input);
+    if (read > minSens) {
+      globalTime = millis();
+      if (globalTime - time > maskTime) {
+        velocity = round((read - minSens)/(maxSens - minSens) * 127) + gain;
+        if (curve != 67) {
+          if (curve == 65) {
+            velocity = ceil(-0.0085*pow(velocity,2) + 2.078*velocity);
+          } else {
+            velocity = ceil(0.0068*pow(velocity,2) + 0.1325*velocity);
+          }
+        }
+        if (velocity > 127){velocity = 127;}
+        if(abs(velocity - lastVelocity) > hhControlSens){
+          // Footsplash
+          byte footVelocity = abs(velocity - lastVelocity);
+          if(velocity >= 100 && (velocity - lastVelocity) >= 70){
+            fastNoteOn(midiChannel, note, footVelocity-20);
+            if(readScan){
+              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(footVelocity-20));
+            }
+          }
+          // Change note
+          if(velocity == 0) {response = 1;}
+          response = ceil(velocity*hhControlStages/127) + 1;
+          lastVelocity = velocity;
+          
+          time = globalTime;
+        }
+      }
+    }
+    return response;
+  }
+
   int getInput(){
     return input - A0;    
   }
@@ -129,6 +168,10 @@ class pin {
     String cName = " ";
     cName.setCharAt(0, curve);
     return cName;
+  }
+
+  void setCurve(char letra) {
+    curve = letra;
   }
 
   void changeCurve(bool reverse=false) {
