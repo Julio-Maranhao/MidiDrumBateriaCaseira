@@ -16,7 +16,7 @@
 #define USEMULTIPLEX 0        // 1 = Usou multiplex para extender entradas; 0 = Não usou
 #define ANALOGPINS 13         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador
 #define DIGITALPINS 2         // Define a quantidade total de pinos digitais usados no projeto
-#define PRESSETS 2            // Define a quantidade total de pressets carregados
+#define PRESSETS 7            // Define a quantidade total de pressets carregados
 ////////////////////////
 
 // Definir quais pinos digitais estão conectados os multiplexadores

@@ -1,6 +1,4 @@
 // Config to acess Pressets
-// Add preset:
-
 String getPresset(int num){
   switch(num) {
     case 0:
@@ -8,6 +6,21 @@ String getPresset(int num){
       break;
     case 1:
       return "Real Drums APP";
+      break;
+    case 2:
+      return "MT PowerDrums 2";
+      break;
+    case 3:
+      return "Addictive Drums";
+      break;
+    case 4:
+      return "Seven Slate Drums";
+      break;
+    case 5:
+      return "EZ Drummer";
+      break;
+    case 6:
+      return "Toontrack";
       break;
     // Add presset
     //case up + 1:
@@ -25,6 +38,21 @@ void setPresset(int num){
       break;
     case 1:
       realDrum();
+      break;
+    case 2:
+      powerDrum();
+      break;
+    case 3:
+      addictiveDrums();
+      break;
+    case 4:
+      sevenSlate();
+      break;
+    case 5:
+      ezDrummer();
+      break;
+    case 6:
+      toontrack();
       break;
     // Add presset
     //case up+1:

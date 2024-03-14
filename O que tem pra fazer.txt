@@ -1,10 +1,8 @@
 V1.0:
-ok - 1 - Menu Presset
-ok - 2 - Presset Functions (midi channel, hhsens, hhmode, hhtype, stages, hhnotes, pins)
-ok - 3 - Add menu Global settings extra options
-ok - 4 - Add if to use HH controller as mechanical and create function
-	Function on PIN: ceil(velocity*hhControlStages/127), if velocity == 0 -> 1
-	Function on Dpin: if else
-	FootSplash on PIN if velocity >= 100 with footVelocity = velocity - lastVelocity
-5 - Add README.MD
-ok - 6 - Add Instructions Comments
+1 - Add README.MD
+2 - Configure More pressets with Excel tables
+
+V1.1:
+1 - Add SD library and pressets
+2 - Add MIDIUSB library to Arduino Micro
+3 - Set Arduino Micro as a MIDIUSB class compliant for MEGA with wire or TX RX connection
