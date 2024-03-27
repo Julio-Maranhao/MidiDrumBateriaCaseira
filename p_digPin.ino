@@ -1,11 +1,11 @@
 // Class to handle digital Pins
 class dpin {
-  byte muxChannel;
-  byte type;
   byte lastVelocity;
   long time;
   public:
   byte input;
+  byte muxChannel;
+  byte type;
   char* name;
   byte note;
   byte maskTime;

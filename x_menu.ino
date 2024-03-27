@@ -10,12 +10,21 @@ class menu {
   menu(){}
 
   void init(){
-    handler.replaceValue(0, "Midi Drum V1.0");
+    handler.replaceValue(0, "Midi Drum V1.1");
     handler.replaceValue(1, "CreatedBy:");
     handler.replaceValue(2, "Julio Maranhao");
     handler.replaceValue(3, "All Rights Reserved.");
 
     delay(3000);
+
+    mainScr();
+  }
+
+  void resetMenu(){
+    level = 0;
+    layer = 0;
+    option = 0;
+    onScreen = 3;
 
     mainScr();
   }
@@ -58,7 +67,7 @@ class menu {
     handler.replaceValue(0, "Play Mode");
     handler.replaceValue(1, "Sensibility");
     handler.replaceValue(2, "Settings");
-    handler.replaceValue(3, "Pressets");
+    handler.replaceValue(3, "MIDI Maps");
 
     handler.indicatePosition(option);
   }
@@ -395,6 +404,7 @@ class menu {
       level = 0;
       layer = 0;
       option = 0;
+      onScreen = 3;
       readScan = false;
       updateScreen = false;
       mainScr();
@@ -417,7 +427,7 @@ class menu {
       updateScreen = true;
     }
     if (Buttons[2].isPressed()){
-      if(option == PRESSETS - 1){ return;}
+      if(option == MIDIMAPS + 1){ return;}
       option += 1;
       if (option > onScreen) {
         onScreen += 1;

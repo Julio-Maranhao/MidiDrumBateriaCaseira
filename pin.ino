@@ -1,12 +1,12 @@
 // Class to handle Analog Pins
 class pin {
+  long time;
+  byte lastVelocity;
+  public:
   byte input;
   byte muxChannel;
   char curve;
   byte type;
-  long time;
-  byte lastVelocity;
-  public:
   char* name;
   byte note;
   byte maskTime;

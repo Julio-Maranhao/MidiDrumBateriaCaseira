@@ -1,7 +1,12 @@
 // MAIN
 #include "lcdHandler.h"
 #include <math.h>
+#include <EEPROM.h>
 //#include <SD.h>
+
+// Arduino PRO MICRO
+//#include <MIDI.h>
+//MIDI_CREATE_DEFAULT_INSTANCE();
 
 // Function to play MIDI
 #define fastNoteOn(_channel,_note,_velocity) { Serial.write(0x90 | _channel);Serial.write(_note);Serial.write(_velocity); }
@@ -14,9 +19,9 @@
 ///// CONFIGURAÇÃO /////
 #define USEMIDI 1             // 0 = 115200 SerialSpeed; 1 = 31250 SerialSpeed MIDI
 #define USEMULTIPLEX 0        // 1 = Usou multiplex para extender entradas; 0 = Não usou
-#define ANALOGPINS 13         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador
-#define DIGITALPINS 2         // Define a quantidade total de pinos digitais usados no projeto
-#define PRESSETS 7            // Define a quantidade total de pressets carregados
+#define ANALOGPINS 13         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador max = 32
+#define DIGITALPINS 2         // Define a quantidade total de pinos digitais usados no projeto max = 16
+#define MIDIMAPS 7            // Define a quantidade total de MIDI Maps carregados
 ////////////////////////
 
 // Definir quais pinos digitais estão conectados os multiplexadores

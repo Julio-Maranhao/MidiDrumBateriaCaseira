@@ -26,6 +26,13 @@ String getPresset(int num){
     //case up + 1:
     //  return "presset name"
     //  break;
+    case 7:
+      return "Save to Memory";
+      break;
+    case 8:
+      return "Load from Memory";
+      break;
+    
     default:
       return "--------------------";
   }
@@ -58,6 +65,12 @@ void setPresset(int num){
     //case up+1:
     //  presetFunction();
     //  break;
+    case 7:
+      saveGlobalConfigs();
+      break;
+    case 8:
+      loadGlobalConfigs();
+      break;
     default:
       return;
   }
