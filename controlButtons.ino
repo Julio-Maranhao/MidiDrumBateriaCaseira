@@ -5,6 +5,7 @@ class controlButton {
   long time;
   int miliSeconds;
   public:
+  int sound;
   bool state;
 
   public:
@@ -15,6 +16,7 @@ class controlButton {
   void set (byte currentPin, bool defState){
     pin = currentPin;
     defaultState = defState;
+    sound = 0;
   }
 
   void readButton(){
@@ -42,6 +44,11 @@ class controlButton {
     if(state) {
       state = false;
       miliSeconds = 0;
+      if(sound > 0) {
+        tone(BUZZER, sound, BUZZERTIME);
+        delay(BUZZERTIME);
+        noTone(BUZZER);
+      }
       return true;
     } else {
       return false;

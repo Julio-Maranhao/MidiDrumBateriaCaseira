@@ -22,6 +22,7 @@
 #define ANALOGPINS 13         // Define a quantidade total de pinos analogicos conectados no Arduino/Multiplexador max = 32
 #define DIGITALPINS 2         // Define a quantidade total de pinos digitais usados no projeto max = 16
 #define MIDIMAPS 7            // Define a quantidade total de MIDI Maps carregados
+#define USEBUZZER 1           // Define a utilização de buzzer indicador de clique 1 = usou; 0= não usou
 ////////////////////////
 
 // Definir quais pinos digitais estão conectados os multiplexadores
@@ -37,6 +38,8 @@
 # define OK 28
 # define BUTTONDEFAULTSTATE true  // se o botão for NF = true se for NA = false
 
+# define BUZZER 8  // Saída do Buzzer
+# define  BUZZERTIME 10 // Tempo de execução do buzzer
 /////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// FIM DA CONFIGURAÇÃO MANUAL ////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////

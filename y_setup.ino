@@ -23,6 +23,15 @@ void setup()
   Buttons[3].set(DIREITA, BUTTONDEFAULTSTATE);
   Buttons[4].set(ESQUERDA, BUTTONDEFAULTSTATE);
 
+  # if USEBUZZER
+    pinMode(BUZZER, OUTPUT);
+    Buttons[0].sound = 1046;
+    Buttons[1].sound = 1568;
+    Buttons[2].sound = 1568;
+    Buttons[3].sound = 1319;
+    Buttons[4].sound = 1319;
+  # endif
+  
   pinMode(OK, INPUT_PULLUP);
   pinMode(CIMA, INPUT_PULLUP);
   pinMode(BAIXO, INPUT_PULLUP);
