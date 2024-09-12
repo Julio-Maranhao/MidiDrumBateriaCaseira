@@ -1,0 +1,40 @@
+https://github.com/massimobernava/md-firmware/blob/master/sketch_microdrum/c_pin.ino
+Formula Som:
+
+Add:
+- State (times)
+- Scan Time
+- RetriggerTime
+- CurveForm
+- Max Reading
+
+Remove:
+- Min Sens
+- Max Sens
+
+Normal Time (no sound before) | Scan Time (sound) | Piezo Time (out sound) | Mask Time (no sound) | RetriggerTime (only same or higher sounds)
+
+yn_0 = 0.5 + ANALOGREAD * Gain/64.0; [0-1024] - [0-64] 20?
+
+// Scan Time
+MaxReading = yn_0
+Passou o tempo -> Piezo time
+
+// Piezo Time
+f = CurveForm/32 [1-127] -> [0-4]
+ret = 0.5 + MaxReading * f/8 -> f/8 [0 - 0,5]
+-> Mask Time
+
+// Mask Time
+Não le nada, passou -> Retrigger Time
+
+// Retrigger time
+MaxRetriggerSensor = MaxReading-((GlobalTime-Time)*(Retrigger+1)/16)
+se Max Rettiger Sensor > 0
+se tiver batida e a leitura for maior do que MAx retrigger sensor -> Scan Time
+
+senão
+-> Normal Time
+
+// Normal Time
+se tiver batida lê e entra no -> Scan Time

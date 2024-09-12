@@ -61,7 +61,7 @@ void defaultPresset(){
   Pin[11].set(A11, "Tom2", 45, 0);
   Pin[11].minSens = 300;
   Pin[11].maxSens = 900;
-  Pin[12].set(A12, "Floor", 41, 0);
+  Pin[12].set(A11, "Floor", 41, 0);
   Pin[12].minSens = 300;
   Pin[12].maxSens = 900;
   // Other Digital Pins

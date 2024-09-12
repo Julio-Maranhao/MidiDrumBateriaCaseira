@@ -1,3 +1,5 @@
+#include <LiquidCrystal_I2C.h>
+
 // Handle all Liquid Crystal functions to be acessed quickly
 #include <LiquidCrystal.h>
 

@@ -24,7 +24,7 @@ void realDrum(){
   Pin[9].set(A9, "Kick", 72, 0);
   Pin[10].set(A10, "Tom1", 57, 0);
   Pin[11].set(A11, "Tom2", 60, 0);
-  Pin[12].set(A12, "Floor", 71, 0);
+  Pin[12].set(A11, "Floor", 71, 0);
 
   Dpin[0].set(22, "Choke1", 64, 0, true);
   Dpin[1].set(23, "Choke2", 60, 0, true);

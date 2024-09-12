@@ -24,7 +24,7 @@ void powerDrum(){
   Pin[9].set(A9, "Kick", 36, 0);
   Pin[10].set(A10, "Tom1", 48, 0);
   Pin[11].set(A11, "Tom2", 45, 0);
-  Pin[12].set(A12, "Floor", 41, 0);
+  Pin[12].set(A11, "Floor", 41, 0);
 
   Dpin[0].set(22, "Choke1", 84, 0, true);
   Dpin[1].set(23, "Choke2", 58, 0, true);
