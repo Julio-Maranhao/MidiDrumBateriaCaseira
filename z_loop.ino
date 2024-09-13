@@ -35,7 +35,6 @@ void loop() {
   
   //Navigate Main Menu
   mainMenu.navigate();
-
   // Scan all pins
   for(int i = 0; i<ANALOGPINS; i++){
     // jump mechanical HH control
@@ -47,6 +46,7 @@ void loop() {
       Pin[i].playMIDI();
     }
   }
+
   for(int i = 0; i<DIGITALPINS; i++){
     // jump mechanical HH control
     if (! hhControlMode && ! hhControlType && i == hhControlPin) {continue;}

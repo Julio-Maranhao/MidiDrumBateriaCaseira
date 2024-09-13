@@ -38,9 +38,8 @@ void setup()
   pinMode(DIREITA, INPUT_PULLUP);
   pinMode(ESQUERDA, INPUT_PULLUP);
   // Carrega o presset default ou memory
+  defaultPresset();
   if (EEPROM.read(0) > 0){
     loadGlobalConfigs();
-  } else {
-    defaultPresset();
   }
 }

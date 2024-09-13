@@ -35,7 +35,7 @@ class dpin {
     if (disabled){return;}
     bool read;
     long globalTime;
-    int vel;
+    byte vel;
     switch (type) {
       case 1:
         ///////////////////////
@@ -74,7 +74,7 @@ class dpin {
           globalTime = millis();
           if (globalTime - time > maskTime) {
             vel = 127;
-            fastNoteOn(midiChannel, note, vel);
+            //fastNoteOn(midiChannel, note, vel);
             if(readScan){
               handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(vel));
             }
