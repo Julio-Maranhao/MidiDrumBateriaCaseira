@@ -56,7 +56,6 @@ bool readScan = false;
 bool updateScreen = false;
 //Menu global
 byte midiChannel = 1;
-byte hhControlSens = 5;
 byte hhPin = 7;
 byte hhControlPin = 0;
 bool hhControlMode = false;  // CC or Mechanical

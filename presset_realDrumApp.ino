@@ -1,7 +1,6 @@
 // presset for Real Drums APP from Kolb APPS
 void realDrum(){
-  midiChannel = 1;                    
-  hhControlSens = 1;                  
+  midiChannel = 1;                              
   hhPin = 7;                             
   hhControlPin = 0;                       
   hhControlMode = false;                  

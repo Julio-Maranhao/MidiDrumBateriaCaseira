@@ -28,30 +28,38 @@ enum state:byte
 // Class to handle Analog Pins
 class pin {
   long time;
-  byte lastVelocity;
+  int maxReading;
+  int yn_1;
   public:
+  char* name;
   byte input;
   byte muxChannel;
   char curve;
   byte type;
-  char* name;
   byte note;
+  byte scanTime;
   byte maskTime;
-  float minSens;
-  float maxSens;
+  byte retrigger;
+  byte curveForm;
   byte gain;
+  byte thresold;  // Parameter for value change
   bool isMultiplex;
   bool disabled;
+  byte state;
 
   public:
   pin(){
-    maskTime = 50;
-    gain = 0;
-    curve = 67;
-    minSens = 400.00;
-    maxSens = 1024.00;
+    gain = 20;
+    curveForm = 110;
+    curve = Linear;
+    scanTime = 10;
+    maskTime = 30;
+    retrigger = 30;
+    thresold = 20;
     time = 0;
-    lastVelocity = 0;
+    maxReading = 0;
+    state = Normal_Time;
+    yn_1 = 0;
   }
 
   void set(byte pinInput, char* pinName, byte pinNote, byte pinType, bool isDisabled = false){
@@ -64,36 +72,25 @@ class pin {
 
   void playMIDI(){
     if (disabled){return;}
-    float read;
+    byte vel;
     long globalTime;
-    int velocity;
+    int yn_0;
     switch (type) {
       case 1:
         ///////////////////////
         /////// OPTICAL ///////
         ///////////////////////
         if (isMultiplex){multiplex.setChannel(muxChannel);}
-        read = analogRead(input);
-        if (read > minSens) {
+        vel = analogRead(input)/8;
+        if (vel > (maxReading + thresold) || vel < (maxReading - thresold)) {
           globalTime = millis();
           if (globalTime - time > maskTime) {
-            velocity = round((read - minSens)/(maxSens - minSens) * 127) + gain;
-            if (curve != 67) {
-              if (curve == 65) {
-                velocity = ceil(-0.0085*pow(velocity,2) + 2.078*velocity);
-              } else {
-                velocity = ceil(0.0068*pow(velocity,2) + 0.1325*velocity);
-              }
+            fastCCOn(midiChannel, note, vel);
+            maxReading = vel;
+            if(readScan){
+              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(vel));
             }
-            if (velocity > 127){velocity = 127;}
-            if(abs(velocity - lastVelocity) > hhControlSens){
-              fastCCOn(midiChannel, note, velocity);
-              lastVelocity = velocity;
-              if(readScan){
-                handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
-              }
-              time = globalTime;
-            }
+            time = globalTime;
           }
         }
         break;
@@ -102,67 +99,113 @@ class pin {
         //////// PIEZO ////////
         ///////////////////////
         if (isMultiplex){multiplex.setChannel(muxChannel);}
-        read = analogRead(input);
-        if (read > minSens) {
-          globalTime = millis();
+        globalTime = millis();
+
+        // MASK TIME //
+        if (state == Mask_Time) {
           if (globalTime - time > maskTime) {
-            velocity = round((read - minSens)/(maxSens - minSens) * 127) + gain;
-            if (curve != 67) {
-              if (curve == 65) {
-                velocity = ceil(-0.0085*pow(velocity,2) + 2.078*velocity);
-              } else {
-                velocity = ceil(0.0068*pow(velocity,2) + 0.1325*velocity);
-              }
-            }
-            if (velocity > 127){velocity = 127;}
-            fastNoteOn(midiChannel, note, velocity);
-            if(readScan){
-              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
-            }
+            state = Retrigger_Time;
+            time = globalTime;
           }
-          time = globalTime;
         }
+        yn_0 = 0.5 + ((float)analogRead(input)) * ((float)gain) / 64.0;
+
+        // SCAN TIME //
+        if (state == Scan_Time) {
+          if (globalTime - time < scanTime) {
+            if (yn_0 > maxReading) {maxReading = yn_0;}
+          } else {
+            state = Piezo_Time;
+          }
+        }
+        // PIEZO TIME //
+        if (state == Piezo_Time) {
+          vel = calcVelocity();
+          fastNoteOn(midiChannel, note, vel);
+          state = Mask_Time;
+          if(readScan){
+            handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(vel));
+          }
+        }
+
+        // RETRIGGER TIME //
+        if (state == Retrigger_Time) {
+          int maxRetriggerSensor = maxReading - (globalTime - time) * (retrigger+1)/16;
+          if (maxRetriggerSensor > 0) {
+            if((yn_0 - yn_1)> thresold && yn_0 > maxRetriggerSensor) {
+              state = Scan_Time;
+              time = globalTime;
+              maxReading = 0;
+            }
+          } else {
+            state = Normal_Time;
+          }
+        // NORMAL TIME //
+        } else if (state == Normal_Time){
+          if ((yn_0 - yn_1) > thresold) {
+            state = Scan_Time;
+            time = globalTime;
+            maxReading = 0;
+          }
+        } 
+
+        yn_1 = yn_0;
     }
   }
 
   byte playHHMechanicalControl(){
     float read;
     long globalTime;
-    int velocity;
+    int vel;
     byte response;
     if (isMultiplex){multiplex.setChannel(muxChannel);}
-    read = analogRead(input);
-    if (read > minSens) {
+    vel = analogRead(input)/8;
+    // Change note
+    if(vel == 0) {response = 1;}
+    response = ceil(vel*hhControlStages/127) + 1;
+    // Footsplash
+    if (vel > (maxReading + thresold) || vel < (maxReading - thresold)) {
       globalTime = millis();
       if (globalTime - time > maskTime) {
-        velocity = round((read - minSens)/(maxSens - minSens) * 127) + gain;
-        if (curve != 67) {
-          if (curve == 65) {
-            velocity = ceil(-0.0085*pow(velocity,2) + 2.078*velocity);
-          } else {
-            velocity = ceil(0.0068*pow(velocity,2) + 0.1325*velocity);
+        if(vel >= 100 && (vel - maxReading) >= 70){
+          fastNoteOn(midiChannel, note, 127);
+          if(readScan){
+            handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(127));
           }
         }
-        if (velocity > 127){velocity = 127;}
-        if(abs(velocity - lastVelocity) > hhControlSens){
-          // Footsplash
-          byte footVelocity = abs(velocity - lastVelocity);
-          if(velocity >= 100 && (velocity - lastVelocity) >= 70){
-            fastNoteOn(midiChannel, note, footVelocity-20);
-            if(readScan){
-              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(footVelocity-20));
-            }
-          }
-          // Change note
-          if(velocity == 0) {response = 1;}
-          response = ceil(velocity*hhControlStages/127) + 1;
-          lastVelocity = velocity;
-          
-          time = globalTime;
-        }
+        maxReading = vel;
+        time = globalTime;
       }
     }
     return response;
+  }
+
+  byte calcVelocity() {
+    int vel;
+    float f = curveForm/32.0;
+    if (curve == Linear) {
+      vel = 0.5 + (((float)maxReading) * f / 8.0);
+    } else {
+      int i = maxReading / 128;
+      int m = maxReading % 128;
+      switch (curve){
+        case Exp:
+          vel = 0.5 + (((float)m*(_Exp[i+1]-_Exp[i])/128.0) + _Exp[i])*f; 
+          break;
+        case Log:
+          vel = 0.5 + (((float)m*(_Log[i+1]-_Log[i])/128.0) + _Log[i])*f; 
+          break;
+        case Sigma:
+          vel = 0.5 + (((float)m*(_Sigma[i+1]-_Sigma[i])/128.0) + _Sigma[i])*f; 
+          break;
+        case Flat:
+          vel = 0.5 + (((float)m*(_Flat[i+1]-_Flat[i])/128.0) + _Flat[i])*f; 
+          break;
+      }
+    }
+    if(vel<=0) return 0;
+    if(vel>=127) return 127;
+    return vel;
   }
 
   int getInput(){
@@ -206,7 +249,7 @@ class pin {
       if(curve == 65){return;}
       curve -= 1;
     }else{
-      if(curve+1 > 67){return;}
+      if(curve+1 > 69){return;}
       curve += 1;
     }
   }

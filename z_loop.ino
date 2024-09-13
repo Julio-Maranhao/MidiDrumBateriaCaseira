@@ -41,6 +41,11 @@ void loop() {
     // jump mechanical HH control
     if (! hhControlMode && hhControlType && i == hhControlPin) {continue;}
     Pin[i].playMIDI();
+    if (Pin[i].state == Scan_Time) {
+      Pin[i].playMIDI();
+      Pin[i].playMIDI();
+      Pin[i].playMIDI();
+    }
   }
   for(int i = 0; i<DIGITALPINS; i++){
     // jump mechanical HH control

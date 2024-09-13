@@ -2,8 +2,6 @@ void saveGlobalConfigs(){
   int add = 0;
   EEPROM.put(add, midiChannel);
   add += sizeof(midiChannel);
-  EEPROM.put(add, hhControlSens);
-  add += sizeof(hhControlSens);
   EEPROM.put(add, hhPin);
   add += sizeof(hhPin);
   EEPROM.put(add, hhControlPin);
@@ -37,16 +35,20 @@ void saveGlobalConfigs(){
     add += sizeof(Pin[i].note);
     EEPROM.put(add, Pin[i].maskTime);
     add += sizeof(Pin[i].maskTime);
-    EEPROM.put(add, Pin[i].minSens);
-    add += sizeof(Pin[i].minSens);
-    EEPROM.put(add, Pin[i].maxSens);
-    add += sizeof(Pin[i].maxSens);
     EEPROM.put(add, Pin[i].gain);
     add += sizeof(Pin[i].gain);
     EEPROM.put(add, Pin[i].isMultiplex);
     add += sizeof(Pin[i].isMultiplex);
     EEPROM.put(add, Pin[i].disabled);
     add += sizeof(Pin[i].disabled);
+    EEPROM.put(add, Pin[i].scanTime);
+    add += sizeof(Pin[i].scanTime);
+    EEPROM.put(add, Pin[i].retrigger);
+    add += sizeof(Pin[i].retrigger);
+    EEPROM.put(add, Pin[i].curveForm);
+    add += sizeof(Pin[i].curveForm);
+    EEPROM.put(add, Pin[i].thresold);
+    add += sizeof(Pin[i].thresold);
   }
 
   // For Dpins
@@ -90,8 +92,6 @@ void loadGlobalConfigs(){
   int add = 0;
   EEPROM.get(add, midiChannel);
   add += sizeof(midiChannel);
-  EEPROM.get(add, hhControlSens);
-  add += sizeof(hhControlSens);
   EEPROM.get(add, hhPin);
   add += sizeof(hhPin);
   EEPROM.get(add, hhControlPin);
@@ -125,16 +125,20 @@ void loadGlobalConfigs(){
     add += sizeof(Pin[i].note);
     EEPROM.get(add, Pin[i].maskTime);
     add += sizeof(Pin[i].maskTime);
-    EEPROM.get(add, Pin[i].minSens);
-    add += sizeof(Pin[i].minSens);
-    EEPROM.get(add, Pin[i].maxSens);
-    add += sizeof(Pin[i].maxSens);
     EEPROM.get(add, Pin[i].gain);
     add += sizeof(Pin[i].gain);
     EEPROM.get(add, Pin[i].isMultiplex);
     add += sizeof(Pin[i].isMultiplex);
     EEPROM.get(add, Pin[i].disabled);
     add += sizeof(Pin[i].disabled);
+    EEPROM.get(add, Pin[i].scanTime);
+    add += sizeof(Pin[i].scanTime);
+    EEPROM.get(add, Pin[i].retrigger);
+    add += sizeof(Pin[i].retrigger);
+    EEPROM.get(add, Pin[i].curveForm);
+    add += sizeof(Pin[i].curveForm);
+    EEPROM.get(add, Pin[i].thresold);
+    add += sizeof(Pin[i].thresold);
   }
 
   // For Dpins

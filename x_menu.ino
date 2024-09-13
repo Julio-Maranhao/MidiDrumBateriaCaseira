@@ -114,14 +114,14 @@ class menu {
       handler.replaceValue(3, "");
       option = 0;
       handler.replaceValue(0, addBlankBetweenValues("Name:", String(Pin[pin].name)));
-      handler.replaceValue(1, addBlankBetweenValues("Min:", String(Pin[pin].minSens)));
-      handler.replaceValue(2, addBlankBetweenValues("Max:", String(Pin[pin].maxSens)));
+      handler.replaceValue(1, addBlankBetweenValues("Gain:", String(Pin[pin].gain)));
+      handler.replaceValue(2, addBlankBetweenValues("Thres:", String(Pin[pin].thresold)));
       handler.indicatePosition(option);
     }
     if(updateScreen) {
       handler.replaceSettingsValue(0, addBlankBetweenValues("Name:", String(Pin[pin].name)));
-      handler.replaceSettingsValue(1, addBlankBetweenValues("Min:", String(Pin[pin].minSens)));
-      handler.replaceSettingsValue(2, addBlankBetweenValues("Max:", String(Pin[pin].maxSens)));
+      handler.replaceSettingsValue(1, addBlankBetweenValues("Gain:", String(Pin[pin].gain)));
+      handler.replaceSettingsValue(2, addBlankBetweenValues("Thres:", String(Pin[pin].thresold)));
       handler.resetIndication(option);
       updateScreen = false;
     }
@@ -144,44 +144,16 @@ class menu {
       option += 1;
       handler.indicatePosition(option);
     }
-    if(Buttons[3].hold() >= 1){
-      switch(option){
-        case 0:
-          pin += 1;
-          break;
-        case 1:
-          Pin[pin].minSens += 50;
-          break;
-        case 2:
-          Pin[pin].maxSens += 50;
-          break;
-      }
-      updateScreen = true;
-    }
-    if(Buttons[4].hold() >= 1){
-      switch(option){
-        case 0:
-          pin -= 1;
-          break;
-        case 1:
-          Pin[pin].minSens -= 50;
-          break;
-        case 2:
-          Pin[pin].maxSens -= 50;
-          break;
-      }
-      updateScreen = true;
-    }
     if(Buttons[3].isPressed()){
       switch(option){
         case 0:
           pin += 1;
           break;
         case 1:
-          Pin[pin].minSens += 1;
+          Pin[pin].gain += 1;
           break;
         case 2:
-          Pin[pin].maxSens += 1;
+          Pin[pin].thresold += 1;
           break;
       }
       updateScreen = true;
@@ -192,10 +164,10 @@ class menu {
           pin -= 1;
           break;
         case 1:
-          Pin[pin].minSens -= 1;
+          Pin[pin].gain -= 1;
           break;
         case 2:
-          Pin[pin].maxSens -= 1;
+          Pin[pin].thresold -= 1;
           break;
       }
       updateScreen = true;
@@ -204,10 +176,6 @@ class menu {
     // Guard For Max|Min value
     if (pin == nPin) {pin = 0;}
     if (pin >= nPin-1) {pin = nPin-1;}
-    if (Pin[pin].minSens > 1024){Pin[pin].minSens = 1024;}
-    if (Pin[pin].maxSens > 1024){Pin[pin].maxSens = 1024;}
-    if (Pin[pin].minSens < 0){Pin[pin].minSens = 0;}
-    if (Pin[pin].maxSens < 0){Pin[pin].maxSens = 0;}
   }
 
   void settingsScr(){
@@ -274,7 +242,7 @@ class menu {
       updateScreen = true;
     }
     if (Buttons[2].isPressed()){
-      if(option == 6){ return;}
+      if(option == 8){ return;}
       option += 1;
       if (option > onScreen) {
         onScreen += 1;
@@ -373,7 +341,7 @@ class menu {
       updateScreen = true;
     }
     if (Buttons[2].isPressed()){
-      if(option == 9){ return;}
+      if(option == 8){ return;}
       option += 1;
       if (option > onScreen) {
         onScreen += 1;
@@ -465,12 +433,18 @@ class menu {
         return addBlankBetweenValues("Curve:", Pin[pin].getCurve());
         break;
       case 4:
-        return addBlankBetweenValues("MaskTime:", String(Pin[pin].maskTime));
+        return addBlankBetweenValues("ScanTime:", String(Pin[pin].scanTime));
         break;
       case 5:
-        return addBlankBetweenValues("Gain:", String(Pin[pin].gain));
+        return addBlankBetweenValues("MaskTime:", String(Pin[pin].maskTime));
         break;
       case 6:
+        return addBlankBetweenValues("Retrigger:", String(Pin[pin].retrigger));
+        break;
+      case 7:
+        return addBlankBetweenValues("CurveForm:", String(Pin[pin].curveForm));
+        break;
+      case 8:
         return addBlankBetweenValues("Disabled:", Pin[pin].getDisabled());
         break;
     }
@@ -491,12 +465,18 @@ class menu {
         Pin[pin].changeCurve(reverse);
         break;
       case 4:
-        if(reverse){Pin[pin].maskTime -= 1;} else{Pin[pin].maskTime += 1;}
+        if(reverse){Pin[pin].scanTime -= 1;} else{Pin[pin].scanTime += 1;}
         break;
       case 5:
-        if(reverse){Pin[pin].gain -= 1;} else{Pin[pin].gain += 1;}
+        if(reverse){Pin[pin].maskTime -= 1;} else{Pin[pin].maskTime += 1;}
         break;
       case 6:
+        if(reverse){Pin[pin].retrigger -= 1;} else{Pin[pin].retrigger += 1;}
+        break;
+      case 7:
+        if(reverse){Pin[pin].curveForm -= 1;} else{Pin[pin].curveForm += 1;}
+        break;
+      case 8:
         Pin[pin].changeDisabled();
         break;
     }
@@ -554,38 +534,35 @@ class menu {
         return addBlankBetweenValues("Channel:", String(midiChannel));
         break;
       case 1:
-        return addBlankBetweenValues("HHSens:", String(hhControlSens));
-        break;
-      case 2:
         if(hhControlMode){
           return addBlankBetweenValues("HHMode:", "CC");
         } else {
           return addBlankBetweenValues("HHMode:", "Mecha");
         }
         break;
-      case 3:
+      case 2:
         if(hhControlType){
           return addBlankBetweenValues("HHCType:", "Analog");
         } else {
           return addBlankBetweenValues("HHCType:", "Digital");
         }
         break;
-      case 4:
+      case 3:
         return addBlankBetweenValues("HHCPin:", String(hhControlPin));
         break;
-      case 5:
+      case 4:
         return addBlankBetweenValues("HHPin:", String(hhPin));
         break;
-      case 6:
+      case 5:
         return addBlankBetweenValues("HHStages:", String(hhControlStages));
         break;
-      case 7:
+      case 6:
         return addBlankBetweenValues("HHNoteOp:", String(hhNote1));
         break;
-      case 8:
+      case 7:
         return addBlankBetweenValues("HHNoteMd:", String(hhNote2));
         break;
-      case 9:
+      case 8:
         return addBlankBetweenValues("HHNoteCl:", String(hhNote3));
         break;
     }
@@ -603,20 +580,13 @@ class menu {
         if (midiChannel > 16){ midiChannel = 15;}
         break;
       case 1:
-        if(reverse){
-          hhControlSens -= 1;
-        } else {
-          hhControlSens += 1;
-        }
-        break;
-      case 2:
         if(hhControlMode){
           hhControlMode = false;
         } else {
           hhControlMode = true;
         }
         break;
-      case 3:
+      case 2:
         if(hhControlType){
           hhControlType = false;
           hhControlStages = 2;
@@ -624,7 +594,7 @@ class menu {
           hhControlType = true;
         }
         break;
-      case 4:
+      case 3:
         if(reverse){
           hhControlPin -= 1;
         } else {
@@ -633,7 +603,7 @@ class menu {
         if (hhControlPin == nPin) {hhControlPin = 0;}
         if (hhControlPin >= nPin-1) {hhControlPin = nPin-1;}
         break;
-      case 5:
+      case 4:
         if(reverse){
           hhPin -= 1;
         } else {
@@ -642,7 +612,7 @@ class menu {
         if (hhPin == nPin) {hhPin = 0;}
         if (hhPin >= nPin-1) {hhPin = nPin-1;}
         break;
-      case 6:
+      case 5:
         if(! hhControlType){hhControlStages = 2; break;}
         if(hhControlStages == 2){
           hhControlStages = 3;
@@ -650,21 +620,21 @@ class menu {
           hhControlStages = 2;
         }
         break;
-      case 7:
+      case 6:
         if(reverse){
           hhNote1 -= 1;
         } else {
           hhNote1 += 1;
         }
         break;
-      case 8:
+      case 7:
         if(reverse){
           hhNote2 -= 1;
         } else {
           hhNote2 += 1;
         }
         break;
-      case 9:
+      case 8:
         if(reverse){
           hhNote3 -= 1;
         } else {

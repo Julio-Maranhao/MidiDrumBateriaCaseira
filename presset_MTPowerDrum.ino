@@ -1,7 +1,6 @@
 // presset for MT Power Drum 2
 void powerDrum(){
-  midiChannel = 1;                    
-  hhControlSens = 1;                  
+  midiChannel = 1;                             
   hhPin = 7;                             
   hhControlPin = 0;                       
   hhControlMode = false;                  

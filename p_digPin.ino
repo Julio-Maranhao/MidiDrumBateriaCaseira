@@ -35,7 +35,7 @@ class dpin {
     if (disabled){return;}
     bool read;
     long globalTime;
-    int velocity;
+    int vel;
     switch (type) {
       case 1:
         ///////////////////////
@@ -44,21 +44,21 @@ class dpin {
         if (isMultiplex){multiplex.setChannel(muxChannel);}
         read = digitalRead(input);
         if (read != defaultState) {
-          velocity = 127;
+          vel = 127;
           if(lastVelocity != 127){
-            fastCCOn(midiChannel, note, velocity);
-            lastVelocity = velocity;
+            fastCCOn(midiChannel, note, vel);
+            lastVelocity = vel;
             if(readScan){
-              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
+              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(vel));
             }
           }
         } else {
-          velocity = 0;
+          vel = 0;
           if(lastVelocity != 0){
-            fastCCOn(midiChannel, note, velocity);
-            lastVelocity = velocity;
+            fastCCOn(midiChannel, note, vel);
+            lastVelocity = vel;
             if(readScan){
-              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
+              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(vel));
             }
           }
         }
@@ -73,10 +73,10 @@ class dpin {
         if (read != defaultState) {
           globalTime = millis();
           if (globalTime - time > maskTime) {
-            velocity = 127;
-            fastNoteOn(midiChannel, note, velocity);
+            vel = 127;
+            fastNoteOn(midiChannel, note, vel);
             if(readScan){
-              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(velocity));
+              handler.replaceValueForce(3, String(name) + "|" + String(note) + "|" + String(vel));
             }
           }
           time = globalTime;
@@ -87,31 +87,31 @@ class dpin {
   byte playHHMechanicalControl(){
     bool read;
     long globalTime;
-    int velocity;
+    int vel;
     byte response;
     if (isMultiplex){multiplex.setChannel(muxChannel);}
     read = analogRead(input);
     globalTime = millis();
     if (read != defaultState) {
       if (globalTime - time > maskTime) {
-        velocity = 127;
+        vel = 127;
         response = 2;
       }
       time = globalTime;
-      if (lastVelocity == velocity) {
+      if (lastVelocity == vel) {
         response = 0;
       }
-      lastVelocity = velocity;
+      lastVelocity = vel;
     } else {
       if (globalTime - time > maskTime) {
-        velocity = 0;
+        vel = 0;
         response = 1;
       }
       time = globalTime;
-      if (lastVelocity == velocity) {
+      if (lastVelocity == vel) {
         response = 0;
       }
-      lastVelocity = velocity;
+      lastVelocity = vel;
     }
     return response;
   }

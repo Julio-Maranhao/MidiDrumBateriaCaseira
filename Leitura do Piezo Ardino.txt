@@ -1,6 +1,8 @@
 https://github.com/massimobernava/md-firmware/blob/master/sketch_microdrum/c_pin.ino
 Formula Som:
 
+Scanear para ver se tem som e depois mais 3x se tiver no Scan Time
+
 Add:
 - State (times)
 - Scan Time
